@@ -10,8 +10,8 @@ import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 
 object Extract {
-  var sample1Buffer = ListBuffer[SampleA]()
-  var sample2Buffer = ListBuffer[SampleB]()
+  var personBuffer = ListBuffer[SampleA]()
+  var debtsBuffer = ListBuffer[SampleB]()
 
   case class SampleA(
     var ID: Long,
@@ -48,18 +48,18 @@ object Extract {
     val sample = SparkSession.builder().master("local[*]").getOrCreate().read.json(s"sample$ntable.json")
     if(ntable == 1){
       sample.foreach(_.getAs[mutable.WrappedArray[GenericRowWithSchema]]("data").foreach(getDFRecords(_)))
-      SparkSession.builder().getOrCreate().sqlContext.createDataFrame(sample1Buffer)
+      SparkSession.builder().getOrCreate().sqlContext.createDataFrame(personBuffer)
     } else {
       sample.foreach(_.getAs[mutable.WrappedArray[GenericRowWithSchema]]("data").foreach(getDFRecords2(_)))
-      SparkSession.builder().getOrCreate().sqlContext.createDataFrame(sample2Buffer)
+      SparkSession.builder().getOrCreate().sqlContext.createDataFrame(debtsBuffer)
     }
   }
 
   def getDFRecords(row: Row): Unit = {
-    sample1Buffer += SampleA(row.getAs[Long]("ID"), row.getAs[String]("Name"), row.getAs[String]("Phone"), row.getAs[String]("Country"), row.getAs[String]("Notes"), row.getAs[String]("Date"))
+    personBuffer += SampleA(row.getAs[Long]("ID"), row.getAs[String]("Name"), row.getAs[String]("Phone"), row.getAs[String]("Country"), row.getAs[String]("Notes"), row.getAs[String]("Date"))
   }
 
   def getDFRecords2(row: Row): Unit = {
-    sample2Buffer += SampleB(row.getAs[Long]("ID"), row.getAs[String]("Income"), row.getAs[Long]("Debt"), row.getAs[String]("Payday_limit"))
+    debtsBuffer += SampleB(row.getAs[Long]("ID"), row.getAs[String]("Income"), row.getAs[Long]("Debt"), row.getAs[String]("Payday_limit"))
   }
 }
