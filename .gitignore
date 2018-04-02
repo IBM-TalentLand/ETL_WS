@@ -1,0 +1,36 @@
+# Temporary files
+.#*
+.DS_Store
+#*
+*~
+
+# Eclipse files
+.project
+.classpath
+.settings
+/.gradle/
+
+# Bazel build artifcats
+/bazel-*
+
+# Local bazel configuration file
+/.bazelrc
+
+# IntelliJ IDEA autogen files
+/.idea
+
+#Auto generated cookies.txt file
+cookies.txt
+
+*.iml
+
+*.xml
+!server.xml
+
+# SBT
+/target
+/project
+
+
+# Runtime generated json files
+*.json
